@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#6000"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/container_picker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#f2f7fa"
+        android:layout_centerInParent="true"
+        android:layout_marginRight="100dp"
+        android:layout_marginLeft="100dp"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="您已经很久未操作，系统将在倒计时完成后返回主界面"
+            android:textSize="30sp"
+            android:gravity="center"
+            android:textColor="@color/bg_black"
+            android:padding="10dp"
+            />
+        <TextView
+            android:id="@+id/count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:gravity="center"
+            android:textSize="28sp"
+            android:padding="10dp"
+            />
+    </LinearLayout>
+</RelativeLayout>

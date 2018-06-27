@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="15dp"
+    android:gravity="right|center_vertical"
+    >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="平台服务电话: 028-85975255"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:drawableLeft="@mipmap/icon_phone"
+        android:drawablePadding="10dp"
+        android:paddingRight="85dp"
+        />
+</LinearLayout>
