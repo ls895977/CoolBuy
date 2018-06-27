@@ -1,0 +1,63 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+        google()
+        jcenter()
+        maven { url 'https://jitpack.io' }
+    }
+    dependencies {
+        classpath 'me.tatarka:gradle-retrolambda:3.7.0'
+    }
+}
+
+ext.supportLibVersion = '27.1.1'
+ext.latest_version = '3.1.0'
+
+dependencies {
+    api fileTree(include: ['*.jar'], dir: 'libs')
+    api "com.android.support:support-v4:${supportLibVersion}"
+    api "com.android.support:appcompat-v7:${supportLibVersion}"
+    api "com.android.support:design:${supportLibVersion}"
+
+    //Gson
+    api 'com.google.code.gson:gson:2.8.2'
+    //图片选择（含rxJava2+,rxAndroid2+,RxPermission,RxBus,Glide4.5.0,PhotoView,压缩使用LuBan,裁剪使用ucrop）
+    api 'com.github.LuckSiege.PictureSelector:picture_library:v2.2.3'
+    //网络请求(含OkHttp)
+    api 'com.lzy.net:okgo:3.0.4'
+    api 'com.lzy.net:okserver:2.0.5'
+    //log
+    api 'com.orhanobut:logger:2.2.0'
+    //permission
+    api("com.github.hotchemi:permissionsdispatcher:${latest_version}") {
+        // if you don't use android.app.Fragment you can exclude support for them
+        exclude module: "support-v13"
+    }
+    annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:${latest_version}"
+    //内存泄露检测
+    debugApi 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+    releaseApi 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+
+
+}
