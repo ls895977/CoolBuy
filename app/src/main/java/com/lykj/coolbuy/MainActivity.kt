@@ -26,28 +26,24 @@ import java.util.concurrent.TimeUnit
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
+import com.lykj.coolbuy.broadcast.CustomBroadReceiver
+import com.lykj.coolbuy.broadcast.WordCallBack
 import com.lykj.coolbuy.view.CountDownPop
 import com.lykj.library_lykj.utils.Debug
 import com.orhanobut.logger.Logger
 
-class MainActivity : BaseAct(), AMapLocationListener {
+class MainActivity : BaseAct(), AMapLocationListener{
+
     private lateinit var fgtList: ArrayList<BaseFgt>
     private var mIsBack: Long = 0    //时间计数
     private var mInterval: Long = 10 //返回主界面的阙值
     private var mShowPop: Long = 5   //显示的倒计时
     var myWebView: WebView? = null
 
-    private val receiver = object : BroadcastReceiver() {
-
-        override fun onReceive(context: Context, intent: Intent) {
-
-            Toast.makeText(context, "接到==========！！！", Toast.LENGTH_LONG).show()
-        }
-
-    }
     override fun initLayoutId(): Int {
         return R.layout.activity_main
     }
+
     override fun init() {
         hideHeader()
         startLocation()
@@ -79,12 +75,15 @@ class MainActivity : BaseAct(), AMapLocationListener {
                 .subscribe {
                     mIsBack++
                 }
+        val l = object : WordCallBack {
+            override fun onBack() {
 
-        val filter = IntentFilter()
-        filter.addAction("ll")
-        context.registerReceiver(receiver, filter)
+                Debug.e("-------成功了。。。-----")
+            }
+        }
+        user.initData(l)
     }
-
+    private val user by lazy { CustomBroadReceiver() }
     @Subscribe(threadMode = ThreadMode.MAIN, code = Constant.RX_CODE_JUMP)
     fun jump2Fragment(type: String) {
         mIsBack = 0

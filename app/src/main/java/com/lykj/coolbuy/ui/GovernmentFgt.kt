@@ -8,9 +8,7 @@ import android.widget.TextView
 import com.luck.picture.lib.rxbus2.RxBus
 import com.lykj.coolbuy.R
 import com.lykj.coolbuy.constants.Constant
-import com.lykj.coolbuy.utils.MyUseUtil
 import com.lykj.library_lykj.common.BaseFgt
-import com.orhanobut.logger.Logger
 
 /**
  *<pre>
@@ -27,7 +25,6 @@ class GovernmentFgt : BaseFgt() {
 
     override fun init() {
         hideHeader()
-
         getViewAndClick<LinearLayout>(R.id.ll_gov_back)
         getViewAndClick<ImageView>(R.id.iv_gov_notice)
         getViewAndClick<ImageView>(R.id.iv_gov_guide)
