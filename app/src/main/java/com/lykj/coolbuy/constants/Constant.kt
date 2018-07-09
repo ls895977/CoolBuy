@@ -14,4 +14,6 @@ object Constant {
     public var TEMP_LOW = ""
     public var TEMP_HIGH = ""
     public var ADDRESS = ""
+    public var Url="";
+    public var LOGIN_ACTION = "com.archie.action.LOGIN_ACTION"
 }

@@ -1,8 +1,16 @@
 package com.lykj.coolbuy
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
+import android.support.v4.content.LocalBroadcastManager
 import android.util.Log
 import android.view.MotionEvent
+import android.webkit.WebView
+import android.widget.Toast
 import com.amap.api.location.AMapLocation
 import com.luck.picture.lib.rxbus2.RxBus
 import com.luck.picture.lib.rxbus2.Subscribe
@@ -19,35 +27,40 @@ import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
 import com.lykj.coolbuy.view.CountDownPop
+import com.lykj.library_lykj.utils.Debug
 import com.orhanobut.logger.Logger
 
-
 class MainActivity : BaseAct(), AMapLocationListener {
-
-    private lateinit var fgtList :ArrayList<BaseFgt>
+    private lateinit var fgtList: ArrayList<BaseFgt>
     private var mIsBack: Long = 0    //时间计数
     private var mInterval: Long = 10 //返回主界面的阙值
     private var mShowPop: Long = 5   //显示的倒计时
+    var myWebView: WebView? = null
 
+    private val receiver = object : BroadcastReceiver() {
+
+        override fun onReceive(context: Context, intent: Intent) {
+
+            Toast.makeText(context, "接到==========！！！", Toast.LENGTH_LONG).show()
+        }
+
+    }
     override fun initLayoutId(): Int {
         return R.layout.activity_main
     }
-
     override fun init() {
         hideHeader()
-
         startLocation()
-
+        myWebView = findViewById(R.id.frame_myweb)
         supportFragmentManager.beginTransaction()
                 .add(R.id.frame_layout, MainFgt())
                 .show(MainFgt())
                 .commit()
-
         RxBus.getDefault().register(this)
         fgtList = ArrayList()
         fgtList.add(MainFgt())
 
-        Flowable.interval( 1, TimeUnit.SECONDS)
+        Flowable.interval(1, TimeUnit.SECONDS)
                 .onBackpressureBuffer()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -59,23 +72,27 @@ class MainActivity : BaseAct(), AMapLocationListener {
                     }
                 }
 
-        Flowable.interval( 1, TimeUnit.SECONDS)
+        Flowable.interval(1, TimeUnit.SECONDS)
                 .onBackpressureBuffer()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     mIsBack++
                 }
+
+        val filter = IntentFilter()
+        filter.addAction("ll")
+        context.registerReceiver(receiver, filter)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, code = Constant.RX_CODE_JUMP)
-    fun jump2Fragment(type: String){
+    fun jump2Fragment(type: String) {
         mIsBack = 0
         val transaction = supportFragmentManager.beginTransaction()
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-        var fgt :BaseFgt = MainFgt()
+        var fgt: BaseFgt = MainFgt()
 //        Logger.e("-----jump2Fragment-----${fgtList!!.size}")
-        when(type){
+        when (type) {
             "0" -> {//跳转到电子政务
                 fgt = GovernmentFgt()
                 fgtList.add(fgt)
@@ -110,7 +127,8 @@ class MainActivity : BaseAct(), AMapLocationListener {
                 bundle.putInt("type", 0)
                 fgt.arguments = bundle
                 fgtList.add(fgt)
-            }"guide" -> {//跳转到办事指南
+            }
+            "guide" -> {//跳转到办事指南
                 fgt = WebViewFgt()
                 val bundle = Bundle()
                 bundle.putInt("type", 1)
@@ -159,7 +177,7 @@ class MainActivity : BaseAct(), AMapLocationListener {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, code = Constant.RX_CODE_RESET_TIME)
-    fun resetTime(type: String){
+    fun resetTime(type: String) {
         mIsBack = 0
     }
 
@@ -173,7 +191,7 @@ class MainActivity : BaseAct(), AMapLocationListener {
         return super.onTouchEvent(event)
     }
 
-    private fun startLocation(){
+    private fun startLocation() {
         val locationClient = AMapLocationClient(this)
         val clientOption = AMapLocationClientOption()
         //获取一次定位结果：
@@ -202,14 +220,14 @@ class MainActivity : BaseAct(), AMapLocationListener {
                 Logger.e("--------$district, $street, $streetNum")
                 Constant.ADDRESS = "$district$street$streetNum"
                 RxBus.getDefault().send(Constant.RX_CODE_GET_ADDRESS, Constant.ADDRESS)
-            }else {
+            } else {
                 //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
-                Log.e("AmapError","location Error, ErrCode:"
+                Log.e("AmapError", "location Error, ErrCode:"
                         + location.errorCode + ", errInfo:"
                         + location.errorInfo)
 //                MyToast.show(context, "定位失败")
             }
-        }else{
+        } else {
 //            MyToast.show(context, "定位失败")
         }
     }
