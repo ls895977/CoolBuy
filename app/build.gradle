@@ -41,4 +41,5 @@ dependencies {
     implementation 'com.just.agentweb:agentweb:4.0.2'
     //定位
     implementation 'com.amap.api:location:4.0.1'
+    compile 'org.greenrobot:eventbus:3.0.0'
 }

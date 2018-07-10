@@ -7,6 +7,7 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
+import android.text.TextUtils
 import android.util.Log
 import android.view.MotionEvent
 import android.webkit.WebView
@@ -27,12 +28,14 @@ import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
 import com.lykj.coolbuy.broadcast.CustomBroadReceiver
+import com.lykj.coolbuy.broadcast.StickyEvent
 import com.lykj.coolbuy.broadcast.WordCallBack
 import com.lykj.coolbuy.view.CountDownPop
 import com.lykj.library_lykj.utils.Debug
 import com.orhanobut.logger.Logger
+import org.greenrobot.eventbus.EventBus
 
-class MainActivity : BaseAct(), AMapLocationListener{
+class MainActivity : BaseAct(), AMapLocationListener {
 
     private lateinit var fgtList: ArrayList<BaseFgt>
     private var mIsBack: Long = 0    //时间计数
@@ -55,33 +58,32 @@ class MainActivity : BaseAct(), AMapLocationListener{
         RxBus.getDefault().register(this)
         fgtList = ArrayList()
         fgtList.add(MainFgt())
-
-        Flowable.interval(1, TimeUnit.SECONDS)
-                .onBackpressureBuffer()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    if (mIsBack == mInterval) this@MainActivity.finish()
-                    if (mInterval - mIsBack == mShowPop) {
-                        val popWin = CountDownPop(context, mShowPop)
-                        popWin.showPopWin(this@MainActivity)
-                    }
-                }
-
-        Flowable.interval(1, TimeUnit.SECONDS)
-                .onBackpressureBuffer()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    mIsBack++
-                }
-        val l = object : WordCallBack {
-            override fun onBack() {
-
-                Debug.e("-------成功了。。。-----")
-            }
-        }
-        user.initData(l)
+//        Flowable.interval(1, TimeUnit.SECONDS)
+//                .onBackpressureBuffer()
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe {
+//                    if (mIsBack == mInterval) this@MainActivity.finish()
+//                    if (mInterval - mIsBack == mShowPop) {
+//                        val popWin = CountDownPop(context, mShowPop)
+//                        popWin.showPopWin(this@MainActivity)
+//                    }
+//                }
+//
+//        Flowable.interval(1, TimeUnit.SECONDS)
+//                .onBackpressureBuffer()
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe {
+//                    mIsBack++
+//                }
+//
+        EventBus.getDefault().register(this)
+    }
+    //    接收消息
+    @org.greenrobot.eventbus.Subscribe(threadMode = org.greenrobot.eventbus.ThreadMode.MAIN, sticky = true)
+    fun onEvent(event: StickyEvent) {
+        myWebView!!.loadUrl(Constant.Url )
     }
     private val user by lazy { CustomBroadReceiver() }
     @Subscribe(threadMode = ThreadMode.MAIN, code = Constant.RX_CODE_JUMP)
