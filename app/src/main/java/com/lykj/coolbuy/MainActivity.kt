@@ -66,7 +66,7 @@ class MainActivity : BaseAct(), AMapLocationListener {
 //                    if (mIsBack == mInterval) this@MainActivity.finish()
 //                    if (mInterval - mIsBack == mShowPop) {
 //                        val popWin = CountDownPop(context, mShowPop)
-//                        popWin.showPopWin(this@MainActivity)
+//                        popWin.(this@MainActivity)
 //                    }
 //                }
 //
