@@ -8,10 +8,10 @@
         android:id="@+id/include"
         layout="@layout/head_index"/>
 
-    <ImageView
+    <WebView
+        android:id="@+id/index_webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@mipmap/icon_index_bg"
         android:layout_below="@+id/include"
         android:scaleType="fitXY"
         />

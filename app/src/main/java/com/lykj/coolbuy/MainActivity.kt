@@ -1,5 +1,6 @@
 package com.lykj.coolbuy
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -10,7 +11,10 @@ import android.support.v4.content.LocalBroadcastManager
 import android.text.TextUtils
 import android.util.Log
 import android.view.MotionEvent
+import android.webkit.WebChromeClient
+import android.webkit.WebSettings
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.Toast
 import com.amap.api.location.AMapLocation
 import com.luck.picture.lib.rxbus2.RxBus
@@ -39,14 +43,13 @@ class MainActivity : BaseAct(), AMapLocationListener {
 
     private lateinit var fgtList: ArrayList<BaseFgt>
     private var mIsBack: Long = 0    //时间计数
-    private var mInterval: Long = 10 //返回主界面的阙值
-    private var mShowPop: Long = 5   //显示的倒计时
+    private var mInterval: Long = 40 //返回主界面的阙值
+    private var mShowPop: Long = 30   //显示的倒计时
     var myWebView: WebView? = null
 
     override fun initLayoutId(): Int {
         return R.layout.activity_main
     }
-
     override fun init() {
         hideHeader()
         startLocation()
@@ -58,32 +61,52 @@ class MainActivity : BaseAct(), AMapLocationListener {
         RxBus.getDefault().register(this)
         fgtList = ArrayList()
         fgtList.add(MainFgt())
-//        Flowable.interval(1, TimeUnit.SECONDS)
-//                .onBackpressureBuffer()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe {
-//                    if (mIsBack == mInterval) this@MainActivity.finish()
-//                    if (mInterval - mIsBack == mShowPop) {
-//                        val popWin = CountDownPop(context, mShowPop)
-//                        popWin.(this@MainActivity)
-//                    }
-//                }
-//
-//        Flowable.interval(1, TimeUnit.SECONDS)
-//                .onBackpressureBuffer()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe {
-//                    mIsBack++
-//                }
+        Flowable.interval(1, TimeUnit.SECONDS)
+                .onBackpressureBuffer()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    if (mIsBack == mInterval) this@MainActivity.finish()
+                    if (mInterval - mIsBack == mShowPop) {
+                        val popWin = CountDownPop(context, mShowPop)
+                        popWin.showPopWin(this@MainActivity)
+                    }
+                }
+
+        Flowable.interval(1, TimeUnit.SECONDS)
+                .onBackpressureBuffer()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    mIsBack++
+                }
 //
         EventBus.getDefault().register(this)
     }
+
     //    接收消息
     @org.greenrobot.eventbus.Subscribe(threadMode = org.greenrobot.eventbus.ThreadMode.MAIN, sticky = true)
+    @SuppressLint("JavascriptInterface")
     fun onEvent(event: StickyEvent) {
-        myWebView!!.loadUrl(Constant.Url )
+        if(myWebView!=null) {
+            myWebView!!.loadUrl(Constant.Url)
+            myWebView!!.addJavascriptInterface(this, "android")//添加js监听 这样html就能调用客户端
+            myWebView!!.webChromeClient = WebChromeClient()
+            myWebView!!.webViewClient = WebViewClient()
+            val webSettings = myWebView!!.settings
+            webSettings.javaScriptEnabled = true//允许使用js
+            /**
+             * LOAD_CACHE_ONLY: 不使用网络，只读取本地缓存数据
+             * LOAD_DEFAULT: （默认）根据cache-control决定是否从网络上取数据。
+             * LOAD_NO_CACHE: 不使用缓存，只从网络获取数据.
+             * LOAD_CACHE_ELSE_NETWORK，只要本地有，无论是否过期，或者no-cache，都使用缓存中的数据。
+             */
+//            webSettings.cacheMode = WebSettings.LOAD_NO_CACHE//不使用缓存，只从网络获取数据.
+            //支持屏幕缩放
+            webSettings.builtInZoomControls = true
+
+
+        }
     }
     private val user by lazy { CustomBroadReceiver() }
     @Subscribe(threadMode = ThreadMode.MAIN, code = Constant.RX_CODE_JUMP)
@@ -249,6 +272,28 @@ class MainActivity : BaseAct(), AMapLocationListener {
                     .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                     .replace(R.id.frame_layout, fgtList[size - 2])
                     .commit()
+        }
+    }
+    @SuppressLint("JavascriptInterface")
+    override fun onStart() {
+        super.onStart()
+        if(TextUtils.isEmpty(Constant.Url)&&myWebView!=null){
+            myWebView!!.loadUrl(Constant.Url )
+            myWebView!!.addJavascriptInterface(this, "android")//添加js监听 这样html就能调用客户端
+            myWebView!!.webChromeClient = WebChromeClient()
+            myWebView!!.webViewClient = WebViewClient()
+            val webSettings = myWebView!!.settings
+            webSettings.javaScriptEnabled = true//允许使用js
+            /**
+             * LOAD_CACHE_ONLY: 不使用网络，只读取本地缓存数据
+             * LOAD_DEFAULT: （默认）根据cache-control决定是否从网络上取数据。
+             * LOAD_NO_CACHE: 不使用缓存，只从网络获取数据.
+             * LOAD_CACHE_ELSE_NETWORK，只要本地有，无论是否过期，或者no-cache，都使用缓存中的数据。
+             */
+//            webSettings.cacheMode = WebSettings.LOAD_NO_CACHE//不使用缓存，只从网络获取数据.
+            //支持屏幕缩放
+            webSettings.setSupportZoom(true)
+            webSettings.builtInZoomControls = true
         }
     }
 }
