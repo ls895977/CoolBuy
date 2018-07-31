@@ -25,6 +25,7 @@ import com.lykj.library_lykj.common.BaseAct
 import com.lykj.library_lykj.http.ApiCallback
 import com.lykj.library_lykj.http.ApiHttp
 import com.lykj.library_lykj.http.ApiRequest
+import com.lykj.library_lykj.utils.Debug
 import com.lykj.library_lykj.utils.TimeUtils
 import com.orhanobut.logger.Logger
 
@@ -207,6 +208,7 @@ class IndexAct : BaseAct() {
             webSettings.javaScriptEnabled = true//允许使用js
             webSettings.setSupportZoom(true)
             webSettings.builtInZoomControls = true
+            Debug.e("-----------------"+Constant.Url)
 
         }
     }

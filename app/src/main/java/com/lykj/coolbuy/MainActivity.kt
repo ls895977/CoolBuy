@@ -104,8 +104,7 @@ class MainActivity : BaseAct(), AMapLocationListener {
 //            webSettings.cacheMode = WebSettings.LOAD_NO_CACHE//不使用缓存，只从网络获取数据.
             //支持屏幕缩放
             webSettings.builtInZoomControls = true
-
-
+            Debug.e("-----------------"+Constant.Url)
         }
     }
     private val user by lazy { CustomBroadReceiver() }
