@@ -43,7 +43,7 @@ class MainActivity : BaseAct(), AMapLocationListener {
 
     private lateinit var fgtList: ArrayList<BaseFgt>
     private var mIsBack: Long = 0    //时间计数
-    private var mInterval: Long = 40 //返回主界面的阙值
+    private var mInterval: Long = 60 //返回主界面的阙值
     private var mShowPop: Long = 30   //显示的倒计时
     var myWebView: WebView? = null
 
