@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.lykj.coolbuy">
+    android:sharedUserId="coo.share"
+    package="com.lykj.coolbuy">
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="info.zhegui.receiver.RECEIVE"/>
     <application
@@ -11,11 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <meta-data android:name="com.amap.api.v2.apikey" android:value="93ecee36358bd87a12324faccd341a37"/>
-
         <activity android:name=".MainActivity" android:screenOrientation="landscape">
-
         </activity>
         <activity android:name=".ui.IndexAct" android:screenOrientation="landscape">
             <intent-filter>

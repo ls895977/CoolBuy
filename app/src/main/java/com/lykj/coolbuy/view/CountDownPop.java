@@ -80,7 +80,6 @@ public class CountDownPop extends PopupWindow implements View.OnClickListener {
                     }
                 });
     }
-
     public void showPopWin(Activity activity) {
         if (null != activity) {
             TranslateAnimation trans = new TranslateAnimation(

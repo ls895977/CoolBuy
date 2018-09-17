@@ -1,21 +1,12 @@
 package com.lykj.coolbuy
-
 import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.net.ConnectivityManager
 import android.os.Bundle
-import android.support.v4.content.LocalBroadcastManager
 import android.text.TextUtils
 import android.util.Log
 import android.view.MotionEvent
 import android.webkit.WebChromeClient
-import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Toast
 import com.amap.api.location.AMapLocation
 import com.luck.picture.lib.rxbus2.RxBus
 import com.luck.picture.lib.rxbus2.Subscribe
@@ -33,7 +24,6 @@ import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
 import com.lykj.coolbuy.broadcast.CustomBroadReceiver
 import com.lykj.coolbuy.broadcast.StickyEvent
-import com.lykj.coolbuy.broadcast.WordCallBack
 import com.lykj.coolbuy.view.CountDownPop
 import com.lykj.library_lykj.utils.Debug
 import com.orhanobut.logger.Logger

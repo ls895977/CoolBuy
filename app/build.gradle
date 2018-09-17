@@ -26,6 +26,14 @@ android {
             }
         }
     }
+    signingConfigs {
+        release {
+                         keyAlias 'client_key'
+                         keyPassword '123456'
+                          storeFile file('/Users/lishan/Desktop/xiangmu/CoolBuy/app/client_key.jks')
+                         storePassword '123456'
+                     }
+             }
 }
 
 dependencies {
